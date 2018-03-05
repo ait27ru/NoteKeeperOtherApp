@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         ListView listCourses = (ListView) findViewById(R.id.list_courses);
         listCourses.setAdapter(mCoursesAdapter);
 
-
+        getLoaderManager().initLoader(LOADER_NOTEKEEPER_COURSES, null, this);
     }
 
     @Override
@@ -71,16 +71,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        Uri uri = Uri.parse("content://com.pluralsight.notekeeper.provider");
+        String[] columns = {"_id", "course_title", "course_id"};
+        return new CursorLoader(this, uri, columns, null, null, "course_title");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        mCoursesAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mCoursesAdapter.changeCursor(null);
     }
 }
